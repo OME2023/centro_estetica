@@ -1,6 +1,11 @@
-from flask import request
-from . import app, db
+from flask import Blueprint, request, jsonify, render_template
+from . import db
 from .models import Cliente
+
+@app.route('/', methods=['GET'])
+def index():
+    return render_template('index.html')
+
 
 @app.route('/add_cliente', methods=['POST'])
 def add_cliente():
@@ -18,3 +23,11 @@ def add_cliente():
         db.session.add(nuevo_cliente)
         db.session.commit()
         return 'Cliente agregado exitosamente'
+
+@app.route('/clientes', methods=['GET'])
+def obtener_clientes():
+    if request.method == 'GET':
+        clientes = Cliente.query.all()
+        # Convierte los objetos Cliente a un formato JSON
+        clientes_json = [cliente.serialize() for cliente in clientes]
+        return jsonify(clientes_json)
