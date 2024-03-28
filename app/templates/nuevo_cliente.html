@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo Cliente</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="container">
+        <div class="alert alert-dismissible alert-success">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {% for category, message in messages %}
+            <strong>{{ category }}</strong> {{ message }}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    {% endwith %}
+    <header class="header">
+        <h1>Agregar Nuevo Cliente</h1>
+        <button class="navbar-toggle">&#9776;</button>
+    </header>
+    <section class="content main-content">
+        <div class="container">
+            <form action="{{ url_for('clientes.crear_nuevo_cliente') }}" method="post">
+                <div class="form-group">
+                    <label for="nombre">Nombre y Apellido:</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="dni">DNI:</label>
+                    <input type="text" class="form-control" id="dni" name="dni" required>
+                </div>
+                <div class="form-group">
+                    <label for="edad">Edad:</label>
+                    <input type="number" class="form-control" id="edad" name="edad">
+                </div>
+                <div class="form-group">
+                    <label for="antecedentes_personales">Antecedentes Personales:</label>
+                    <textarea class="form-control" id="antecedentes_personales" name="antecedentes_personales"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="antecedentes_hereditarios">Antecedentes Hereditarios:</label>
+                    <textarea class="form-control" id="antecedentes_hereditarios" name="antecedentes_hereditarios"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="alergia">Alergia:</label>
+                    <textarea class="form-control" id="alergia" name="alergia"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="medicacion">Medicación:</label>
+                    <textarea class="form-control" id="medicacion" name="medicacion"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="background-color: #ff4081; border-color: #ff4081;">Guardar Cliente</button>
+                <a href="/clientes" class="btn btn-secondary" style="background-color: #ff4081; border-color: #ff4081;">Cancelar</a>
+                <a href="/clientes" class="btn btn-secondary" style="background-color: #ff4081; border-color: #ff4081;">Volver</a>
+            </form>
+        </div>
+    </section>
+    
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</body>
+</html>
