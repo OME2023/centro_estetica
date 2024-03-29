@@ -1,33 +1,22 @@
-from . import db
-from datetime import datetime, timezone
+from sqlalchemy import create_engine, Column, Integer, String, DateTime
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from datetime import datetime  # Agregamos la importación para obtener la fecha actual
 
-class Cliente(db.Model):
+Base = declarative_base()
+
+class Cliente(Base):
     __tablename__ = 'clientes'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    dni = db.Column(db.String(20), unique=True, nullable=False)
-    nombre_apellido = db.Column(db.String(100), nullable=False)
-    edad = db.Column(db.Integer, nullable=False)
-    antecedentes_personales = db.Column(db.Text, nullable=True)
-    antecedentes_hereditarios = db.Column(db.Text, nullable=True)
-    alergia = db.Column(db.Text, nullable=True)
-    medicacion = db.Column(db.Text, nullable=True)
-    fecha_ingreso = db.Column(db.DateTime, default=datetime.now(timezone.utc))
 
-# En el archivo models.py
-
-from . import db
-
-class Cliente(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    dni = db.Column(db.String(20), unique=True, nullable=False)
-    nombre_apellido = db.Column(db.String(100), nullable=False)
-    edad = db.Column(db.Integer, nullable=False)
-    antecedentes_personales = db.Column(db.Text, nullable=True)
-    antecedentes_hereditarios = db.Column(db.Text, nullable=True)
-    alergia = db.Column(db.Text, nullable=True)
-    medicacion = db.Column(db.Text, nullable=True)
-    fecha_ingreso = db.Column(db.DateTime, default=db.func.current_timestamp())
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    dni = Column(String(20))
+    nombre_apellido = Column(String(100))
+    edad = Column(Integer)
+    antecedentes_personales = Column(String)
+    antecedentes_hereditarios = Column(String)
+    alergia = Column(String)
+    medicacion = Column(String)
+    fecha_alta = Column(DateTime, default=datetime.now)  # Añadimos el campo de fecha de alta
 
     def serialize(self):
         return {
@@ -39,8 +28,10 @@ class Cliente(db.Model):
             'antecedentes_hereditarios': self.antecedentes_hereditarios,
             'alergia': self.alergia,
             'medicacion': self.medicacion,
-            'fecha_ingreso': self.fecha_ingreso.strftime('%Y-%m-%d %H:%M:%S')  # Formatea la fecha como string
+            'fecha_alta': self.fecha_alta.strftime("%Y-%m-%d %H:%M:%S")  # Convertimos la fecha a string para serializar
         }
 
-
-# No olvides importar datetime si vas a usarlo para la fecha_ingreso
+    @staticmethod
+    def inicializar_base_datos(url):
+        engine = create_engine(url)
+        Base.metadata.create_all(bind=engine)
